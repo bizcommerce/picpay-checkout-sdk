@@ -1,0 +1,281 @@
+{
+  "info": {
+    "name": "PicPay Checkout API",
+    "description": "PicPay Transparent Checkout API — OAuth2 auth, credit card, PIX, wallet payments, charge lookup, capture, and refund.\n\nGenerated from @bizcommerce/picpay-checkout-sdk fixtures.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "https://checkout-api-sandbox.picpay.com",
+      "type": "string"
+    },
+    {
+      "key": "clientId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "clientSecret",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "accessToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "merchantChargeId",
+      "value": "order-001",
+      "type": "string"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{accessToken}}",
+        "type": "string"
+      }
+    ]
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Get OAuth Token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    var json = pm.response.json();",
+                  "    pm.collectionVariables.set(\"accessToken\", json.access_token);",
+                  "    pm.test(\"Token saved to collection variables\", function () {",
+                  "        pm.expect(json.access_token).to.be.a(\"string\");",
+                  "    });",
+                  "} else {",
+                  "    pm.test(\"OAuth token request failed with status \" + pm.response.code, function () {",
+                  "        pm.expect.fail(pm.response.text());",
+                  "    });",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/x-www-form-urlencoded"
+              }
+            ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "grant_type",
+                  "value": "client_credentials",
+                  "type": "text"
+                },
+                {
+                  "key": "client_id",
+                  "value": "{{clientId}}",
+                  "type": "text"
+                },
+                {
+                  "key": "client_secret",
+                  "value": "{{clientSecret}}",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/oauth2/token",
+              "host": ["{{baseUrl}}"],
+              "path": ["oauth2", "token"]
+            },
+            "description": "Obtain a Bearer token using client_credentials grant. The test script automatically saves the access_token to the collection variable so all subsequent requests are authenticated.\n\nTokens expire every 5 minutes (300s)."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Credit Card",
+      "item": [
+        {
+          "name": "Authorize Credit Card",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"paymentSource\": \"GATEWAY\",\n  \"merchantChargeId\": \"{{merchantChargeId}}\",\n  \"customer\": {\n    \"name\": \"John Doe\",\n    \"email\": \"john@example.com\",\n    \"documentType\": \"CPF\",\n    \"documentNumber\": \"12345678901\",\n    \"phone\": {\n      \"country\": \"55\",\n      \"area\": \"11\",\n      \"number\": \"999999999\"\n    },\n    \"address\": {\n      \"street\": \"Rua Teste\",\n      \"number\": \"123\",\n      \"neighborhood\": \"Centro\",\n      \"city\": \"Sao Paulo\",\n      \"state\": \"SP\",\n      \"country\": \"BR\",\n      \"zipCode\": \"01001000\"\n    }\n  },\n  \"transactions\": [\n    {\n      \"paymentType\": \"CREDIT\",\n      \"amount\": 1000,\n      \"credit\": {\n        \"installments\": 1,\n        \"card\": {\n          \"number\": \"4111111111111111\",\n          \"holder\": \"JOHN DOE\",\n          \"expirationMonth\": \"12\",\n          \"expirationYear\": \"2030\",\n          \"cvv\": \"123\"\n        }\n      }\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/charge/authorization",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "charge", "authorization"]
+            },
+            "description": "Authorize a credit card payment. Amount is in cents (1000 = R$ 10.00). Uses test card 4111111111111111 (Visa)."
+          }
+        }
+      ]
+    },
+    {
+      "name": "PIX",
+      "item": [
+        {
+          "name": "Create PIX Charge",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"paymentSource\": \"GATEWAY\",\n  \"merchantChargeId\": \"order-002\",\n  \"customer\": {\n    \"name\": \"John Doe\",\n    \"email\": \"john@example.com\",\n    \"documentType\": \"CPF\",\n    \"documentNumber\": \"12345678901\",\n    \"phone\": {\n      \"country\": \"55\",\n      \"area\": \"11\",\n      \"number\": \"999999999\"\n    },\n    \"address\": {\n      \"street\": \"Rua Teste\",\n      \"number\": \"123\",\n      \"neighborhood\": \"Centro\",\n      \"city\": \"Sao Paulo\",\n      \"state\": \"SP\",\n      \"country\": \"BR\",\n      \"zipCode\": \"01001000\"\n    }\n  },\n  \"transactions\": [\n    {\n      \"paymentType\": \"PIX\",\n      \"amount\": 5000\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/charge/pix",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "charge", "pix"]
+            },
+            "description": "Generate a PIX QR code for payment. Amount is in cents (5000 = R$ 50.00). Response includes qrCode (copy-paste string) and qrCodeBase64 (image)."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Wallet",
+      "item": [
+        {
+          "name": "Create Wallet Charge",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"paymentSource\": \"GATEWAY\",\n  \"merchantChargeId\": \"order-003\",\n  \"customer\": {\n    \"name\": \"John Doe\",\n    \"email\": \"john@example.com\",\n    \"documentType\": \"CPF\",\n    \"documentNumber\": \"12345678901\",\n    \"phone\": {\n      \"country\": \"55\",\n      \"area\": \"11\",\n      \"number\": \"999999999\"\n    },\n    \"address\": {\n      \"street\": \"Rua Teste\",\n      \"number\": \"123\",\n      \"neighborhood\": \"Centro\",\n      \"city\": \"Sao Paulo\",\n      \"state\": \"SP\",\n      \"country\": \"BR\",\n      \"zipCode\": \"01001000\"\n    }\n  },\n  \"transactions\": [\n    {\n      \"paymentType\": \"WALLET\",\n      \"amount\": 3000\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/charge/wallet",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "charge", "wallet"]
+            },
+            "description": "Generate a PicPay Wallet QR code / deep link. Amount is in cents (3000 = R$ 30.00). Response includes qrCode, qrCodeBase64, and deepLink."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Charge",
+      "item": [
+        {
+          "name": "Find Charge",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/charge/{{merchantChargeId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "charge", "{{merchantChargeId}}"]
+            },
+            "description": "Look up the current status of a charge by merchantChargeId."
+          }
+        },
+        {
+          "name": "Capture Charge",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"amount\": 1000\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/charge/{{merchantChargeId}}/capture",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "charge", "{{merchantChargeId}}", "capture"]
+            },
+            "description": "Capture a previously authorized credit card charge. Amount is in cents. Omit the body to capture the full amount."
+          }
+        },
+        {
+          "name": "Refund Charge",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"amount\": 500\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/charge/{{merchantChargeId}}/refund",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "charge", "{{merchantChargeId}}", "refund"]
+            },
+            "description": "Refund a charge (full or partial). Amount is in cents. Omit the body for a full refund."
+          }
+        }
+      ]
+    }
+  ]
+}
