@@ -10,9 +10,11 @@ export enum PaymentType {
 
 export enum ChargeStatus {
   CREATED = 'CREATED',
+  PRE_AUTHORIZED = 'PRE_AUTHORIZED',
   AUTHORIZED = 'AUTHORIZED',
   PAID = 'PAID',
   REFUNDED = 'REFUNDED',
+  PARTIAL = 'PARTIAL',
   PARTIALLY_REFUNDED = 'PARTIALLY_REFUNDED',
   CANCELLED = 'CANCELLED',
   EXPIRED = 'EXPIRED',
@@ -20,6 +22,7 @@ export enum ChargeStatus {
 
 export enum TransactionStatus {
   CREATED = 'CREATED',
+  PENDING = 'PENDING',
   AUTHORIZED = 'AUTHORIZED',
   PAID = 'PAID',
   REFUNDED = 'REFUNDED',

@@ -25,10 +25,10 @@ describe('CreditCardResource', () => {
   it('should authorize a credit card payment', async () => {
     const result = await client.creditCard.authorize(CREDIT_CARD_AUTH_REQUEST);
 
-    expect(result.chargeId).toBe(CREDIT_CARD_AUTH_RESPONSE.chargeId);
+    expect(result.id).toBe(CREDIT_CARD_AUTH_RESPONSE.id);
     expect(result.merchantChargeId).toBe('order-001');
     expect(result.transactions).toHaveLength(1);
-    expect(result.transactions[0]?.credit.lastDigits).toBe('1111');
+    expect(result.transactions[0]?.credit.cardNumber).toBe('411111******1111');
   });
 
   it('should call the correct endpoint for authorization', async () => {
@@ -50,7 +50,7 @@ describe('CreditCardResource', () => {
 
     const [url] = mockFetch.mock.calls[1]!;
     expect(url).toContain('/api/v1/charge/order-001/capture');
-    expect(result.chargeId).toBe(CHARGE_RESPONSE.chargeId);
+    expect(result.id).toBe(CHARGE_RESPONSE.id);
   });
 
   it('should capture with partial amount', async () => {

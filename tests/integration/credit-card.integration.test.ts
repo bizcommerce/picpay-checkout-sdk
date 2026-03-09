@@ -3,7 +3,6 @@ import {
   PicPayClient,
   PaymentSource,
   PaymentType,
-  DocumentType,
 } from '../../src/index.js';
 import type { CreditCardAuthRequest } from '../../src/index.js';
 import { getIntegrationClient } from './setup.js';
@@ -27,13 +26,12 @@ describe('Credit Card Integration', () => {
           amount: 100,
           credit: {
             installments: 1,
-            card: {
-              number: TEST_CARD_VISA,
-              holder: 'JOHN DOE',
-              expirationMonth: '12',
-              expirationYear: '2030',
-              cvv: '123',
-            },
+            cardNumber: TEST_CARD_VISA,
+            cardholderName: 'JOHN DOE',
+            cardholderDocument: '12345678901',
+            expirationMonth: 12,
+            expirationYear: 2030,
+            cvv: '123',
           },
         },
       ],
@@ -41,7 +39,7 @@ describe('Credit Card Integration', () => {
 
     const result = await client.creditCard.authorize(request);
 
-    expect(result.chargeId).toBeTruthy();
+    expect(result.id).toBeTruthy();
     expect(result.merchantChargeId).toBe(request.merchantChargeId);
     expect(result.transactions).toHaveLength(1);
   });

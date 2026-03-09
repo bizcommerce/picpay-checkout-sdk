@@ -15,22 +15,35 @@ export interface WalletChargeRequest {
   notificationUrl?: string;
 }
 
+export interface WalletResponseData {
+  qrCode: string;
+  qrCodeBase64: string;
+  expiresAt: string;
+}
+
 export interface WalletTransactionResponse {
-  transactionId: string;
   paymentType: PaymentType.WALLET;
-  status: TransactionStatus;
   amount: number;
-  wallet: {
-    qrCode: string;
-    qrCodeBase64: string;
-    deepLink?: string;
-    expiresAt: string;
-  };
+  originalAmount: number;
+  refundedAmount: number;
+  transactionStatus: TransactionStatus;
+  createdAt: string;
+  updatedAt: string;
+  transactionId: string;
+  softDescriptor: string | null;
+  errorMessage: string | null;
+  mac: string | null;
+  credit: null;
+  wallet: WalletResponseData;
+  pix: null;
 }
 
 export interface WalletChargeResponse {
-  chargeId: string;
   merchantChargeId: string;
-  status: string;
+  id: string;
+  chargeStatus: string;
+  amount: number;
+  originalAmount: number;
+  refundedAmount: number;
   transactions: WalletTransactionResponse[];
 }

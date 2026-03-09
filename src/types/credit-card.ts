@@ -2,16 +2,16 @@ import type { PaymentSource, PaymentType, TransactionStatus, CardBrand } from '.
 import type { Customer, DeviceInformation } from './customer.js';
 
 export interface CreditCardData {
-  number: string;
-  holder: string;
-  expirationMonth: string;
-  expirationYear: string;
+  cardNumber: string;
+  cardholderName: string;
+  cardholderDocument: string;
+  expirationMonth: number;
+  expirationYear: number;
   cvv: string;
 }
 
-export interface CreditDetails {
+export interface CreditDetails extends CreditCardData {
   installments: number;
-  card: CreditCardData;
   softDescriptor?: string;
   capture?: boolean;
 }
@@ -31,24 +31,47 @@ export interface CreditCardAuthRequest {
   notificationUrl?: string;
 }
 
+export interface CreditTransactionResponseData {
+  nsu: string | null;
+  cardNumber: string | null;
+  authorizationCode: string | null;
+  authorizationResponseCode: string | null;
+  reasonCode: string | null;
+  reasonMessage: string | null;
+  brand: CardBrand;
+  cardholderName: string | null;
+  cardholderDocument: string | null;
+  expirationMonth: number | null;
+  expirationYear: number | null;
+  installmentNumber: number;
+  issuerTransactionId: string | null;
+  installmentType: string;
+}
+
 export interface CreditCardTransactionResponse {
-  transactionId: string;
   paymentType: PaymentType.CREDIT;
-  status: TransactionStatus;
   amount: number;
-  credit: {
-    installments: number;
-    brand: CardBrand;
-    lastDigits: string;
-    authorizationCode?: string;
-    nsu?: string;
-  };
+  originalAmount: number;
+  refundedAmount: number;
+  transactionStatus: TransactionStatus;
+  createdAt: string;
+  updatedAt: string;
+  transactionId: string;
+  softDescriptor: string | null;
+  errorMessage: string | null;
+  mac: string | null;
+  credit: CreditTransactionResponseData;
+  wallet: null;
+  pix: null;
 }
 
 export interface CreditCardAuthResponse {
-  chargeId: string;
   merchantChargeId: string;
-  status: string;
+  id: string;
+  chargeStatus: string;
+  amount: number;
+  originalAmount: number;
+  refundedAmount: number;
   transactions: CreditCardTransactionResponse[];
 }
 

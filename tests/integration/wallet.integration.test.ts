@@ -26,7 +26,7 @@ describe('Wallet Integration', () => {
 
     const result = await client.wallet.createCharge(request);
 
-    expect(result.chargeId).toBeTruthy();
+    expect(result.id).toBeTruthy();
     expect(result.transactions[0]?.wallet.qrCode).toBeTruthy();
   });
 });

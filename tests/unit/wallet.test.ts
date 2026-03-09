@@ -23,11 +23,10 @@ describe('WalletResource', () => {
   it('should create a wallet charge', async () => {
     const result = await client.wallet.createCharge(WALLET_CHARGE_REQUEST);
 
-    expect(result.chargeId).toBe(WALLET_CHARGE_RESPONSE.chargeId);
+    expect(result.id).toBe(WALLET_CHARGE_RESPONSE.id);
     expect(result.merchantChargeId).toBe('order-003');
     expect(result.transactions).toHaveLength(1);
     expect(result.transactions[0]?.wallet.qrCode).toBeTruthy();
-    expect(result.transactions[0]?.wallet.deepLink).toBeTruthy();
   });
 
   it('should call the correct endpoint', async () => {

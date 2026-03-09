@@ -23,8 +23,8 @@ describe('ChargeResource', () => {
   it('should find a charge by merchantChargeId', async () => {
     const result = await client.charge.find('order-001');
 
-    expect(result.chargeId).toBe(CHARGE_RESPONSE.chargeId);
-    expect(result.status).toBe(ChargeStatus.AUTHORIZED);
+    expect(result.id).toBe(CHARGE_RESPONSE.id);
+    expect(result.chargeStatus).toBe(ChargeStatus.PAID);
   });
 
   it('should call the correct endpoint for find', async () => {
@@ -54,7 +54,7 @@ describe('ChargeResource', () => {
     const [url, options] = mockFetch.mock.calls[1]!;
     expect(url).toContain('/api/v1/charge/order-001/refund');
     expect(options?.method).toBe('POST');
-    expect(result.status).toBe(ChargeStatus.REFUNDED);
+    expect(result.chargeStatus).toBe(ChargeStatus.PARTIAL);
   });
 
   it('should refund with partial amount', async () => {

@@ -44,12 +44,12 @@ export class TokenManager {
   private async fetchToken(): Promise<string> {
     const response = await this.fetchFn(this.tokenUrl, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: new URLSearchParams({
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
         grant_type: 'client_credentials',
         client_id: this.clientId,
         client_secret: this.clientSecret,
-      }).toString(),
+      }),
     });
 
     if (!response.ok) {

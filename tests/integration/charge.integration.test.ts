@@ -21,13 +21,12 @@ describe('Charge Integration', () => {
           amount: 1000,
           credit: {
             installments: 1,
-            card: {
-              number: TEST_CARD_VISA,
-              holder: 'JOHN DOE',
-              expirationMonth: '12',
-              expirationYear: '2030',
-              cvv: '123',
-            },
+            cardNumber: TEST_CARD_VISA,
+            cardholderName: 'JOHN DOE',
+            cardholderDocument: '12345678901',
+            expirationMonth: 12,
+            expirationYear: 2030,
+            cvv: '123',
           },
         },
       ],
@@ -37,13 +36,13 @@ describe('Charge Integration', () => {
   it('should find a charge by merchantChargeId', async () => {
     const result = await client.charge.find(merchantChargeId);
 
-    expect(result.chargeId).toBeTruthy();
+    expect(result.id).toBeTruthy();
     expect(result.merchantChargeId).toBe(merchantChargeId);
   });
 
   it('should refund a charge', async () => {
     const result = await client.charge.refund(merchantChargeId, { amount: 500 });
 
-    expect(result.chargeId).toBeTruthy();
+    expect(result.id).toBeTruthy();
   });
 });

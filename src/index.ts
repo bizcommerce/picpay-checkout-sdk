@@ -26,6 +26,7 @@ export {
 export type { PicPayConfig, TokenResponse } from './types/config.js';
 
 // Customer types
+export { PhoneType } from './types/customer.js';
 export type { Customer, Phone, Address, DeviceInformation } from './types/customer.js';
 
 // Credit card types
@@ -34,6 +35,7 @@ export type {
   CreditDetails,
   CreditCardTransaction,
   CreditCardAuthRequest,
+  CreditTransactionResponseData,
   CreditCardTransactionResponse,
   CreditCardAuthResponse,
   CaptureRequest,
@@ -43,6 +45,7 @@ export type {
 export type {
   PixTransaction,
   PixChargeRequest,
+  PixResponseData,
   PixTransactionResponse,
   PixChargeResponse,
 } from './types/pix.js';
@@ -51,6 +54,7 @@ export type {
 export type {
   WalletTransaction,
   WalletChargeRequest,
+  WalletResponseData,
   WalletTransactionResponse,
   WalletChargeResponse,
 } from './types/wallet.js';

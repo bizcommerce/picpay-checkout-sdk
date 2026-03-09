@@ -23,7 +23,7 @@ describe('PixResource', () => {
   it('should create a PIX charge', async () => {
     const result = await client.pix.createCharge(PIX_CHARGE_REQUEST);
 
-    expect(result.chargeId).toBe(PIX_CHARGE_RESPONSE.chargeId);
+    expect(result.id).toBe(PIX_CHARGE_RESPONSE.id);
     expect(result.merchantChargeId).toBe('order-002');
     expect(result.transactions).toHaveLength(1);
     expect(result.transactions[0]?.pix.qrCode).toBeTruthy();

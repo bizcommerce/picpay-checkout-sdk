@@ -18,21 +18,32 @@ export interface PixChargeRequest {
   notificationUrl?: string;
 }
 
+export interface PixResponseData {
+  qrCode: string;
+  qrCodeBase64: string;
+  endToEndId: string | null;
+}
+
 export interface PixTransactionResponse {
-  transactionId: string;
   paymentType: PaymentType.PIX;
-  status: TransactionStatus;
   amount: number;
-  pix: {
-    qrCode: string;
-    qrCodeBase64: string;
-    expiresAt: string;
-  };
+  originalAmount: number;
+  refundedAmount: number;
+  transactionStatus: TransactionStatus;
+  createdAt: string;
+  updatedAt: string;
+  transactionId: string;
+  errorMessage: string | null;
+  credit: null;
+  pix: PixResponseData;
 }
 
 export interface PixChargeResponse {
-  chargeId: string;
   merchantChargeId: string;
-  status: string;
+  id: string;
+  chargeStatus: string;
+  amount: number;
+  originalAmount: number;
+  refundedAmount: number;
   transactions: PixTransactionResponse[];
 }

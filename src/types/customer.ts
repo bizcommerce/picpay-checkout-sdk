@@ -1,9 +1,15 @@
 import type { DocumentType } from './common.js';
 
+export enum PhoneType {
+  MOBILE = 'MOBILE',
+  LANDLINE = 'LANDLINE',
+}
+
 export interface Phone {
-  country: string;
-  area: string;
+  countryCode: string;
+  areaCode: string;
   number: string;
+  type: PhoneType;
 }
 
 export interface Address {
@@ -21,7 +27,7 @@ export interface Customer {
   name: string;
   email: string;
   documentType: DocumentType;
-  documentNumber: string;
+  document: string;
   phone?: Phone;
   address?: Address;
 }

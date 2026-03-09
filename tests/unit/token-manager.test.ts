@@ -82,17 +82,16 @@ describe('TokenManager', () => {
     expect(mockFetch).toHaveBeenCalledTimes(2);
   });
 
-  it('should send correct form data in token request', async () => {
+  it('should send correct JSON body in token request', async () => {
     const manager = new TokenManager({ ...TEST_CONFIG, fetch: mockFetch }, BASE_URL);
     await manager.getToken();
 
     const [, options] = mockFetch.mock.calls[0]!;
-    expect(options?.headers).toEqual({ 'Content-Type': 'application/x-www-form-urlencoded' });
+    expect(options?.headers).toEqual({ 'Content-Type': 'application/json' });
 
-    const body = options?.body as string;
-    const params = new URLSearchParams(body);
-    expect(params.get('grant_type')).toBe('client_credentials');
-    expect(params.get('client_id')).toBe(TEST_CONFIG.clientId);
-    expect(params.get('client_secret')).toBe(TEST_CONFIG.clientSecret);
+    const body = JSON.parse(options?.body as string) as Record<string, string>;
+    expect(body.grant_type).toBe('client_credentials');
+    expect(body.client_id).toBe(TEST_CONFIG.clientId);
+    expect(body.client_secret).toBe(TEST_CONFIG.clientSecret);
   });
 });

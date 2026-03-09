@@ -1,17 +1,29 @@
-import type { ChargeStatus, TransactionStatus, PaymentType } from './common.js';
+import type { PaymentType, TransactionStatus } from './common.js';
 
 export interface ChargeTransactionResponse {
-  transactionId: string;
   paymentType: PaymentType;
-  status: TransactionStatus;
   amount: number;
-  [key: string]: unknown;
+  originalAmount: number;
+  refundedAmount: number;
+  transactionStatus: TransactionStatus;
+  createdAt: string;
+  updatedAt: string;
+  transactionId: string;
+  softDescriptor: string | null;
+  errorMessage: string | null;
+  mac: string | null;
+  credit: unknown;
+  wallet: unknown;
+  pix: unknown;
 }
 
 export interface ChargeResponse {
-  chargeId: string;
   merchantChargeId: string;
-  status: ChargeStatus;
+  id: string;
+  chargeStatus: string;
+  amount: number;
+  originalAmount: number;
+  refundedAmount: number;
   transactions: ChargeTransactionResponse[];
 }
 
@@ -20,8 +32,11 @@ export interface RefundRequest {
 }
 
 export interface RefundResponse {
-  chargeId: string;
   merchantChargeId: string;
-  status: ChargeStatus;
+  id: string;
+  chargeStatus: string;
+  amount: number;
+  originalAmount: number;
+  refundedAmount: number;
   transactions: ChargeTransactionResponse[];
 }

@@ -26,7 +26,7 @@ describe('PIX Integration', () => {
 
     const result = await client.pix.createCharge(request);
 
-    expect(result.chargeId).toBeTruthy();
+    expect(result.id).toBeTruthy();
     expect(result.transactions[0]?.pix.qrCode).toBeTruthy();
     expect(result.transactions[0]?.pix.qrCodeBase64).toBeTruthy();
   });
